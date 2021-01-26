@@ -1,40 +1,157 @@
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.EmptyBorder;
+import java.util.*;
 
 public class Main {
+    static Scanner input = new Scanner(System.in);
+
+    public static void clearScreen() {  
+        System.out.print("\033[H\033[2J");  
+        System.out.flush();  
+    }  
+
+    public static void SubnetCalculator(){
+        
+    }
+
+    public static void AddressClass(){
+
+    }
+
+    public static void AddressType(){
+        System.out.print("Input IP Address: ");
+        String ip_add = input.next();
+        String[] new_add = ip_add.split("/");
+        String[] address = new_add[0].split("\\."); 
+
+        int second = Integer.parseInt(address[1]); 
+        int third = Integer.parseInt(address[2]);
+        int fourth = Integer.parseInt(address[3]);
+        int fifth = Integer.parseInt(new_add[1]);
+
+        int newfifth = 0;
+
+        if(fifth >= 8 && fifth <= 15){
+            newfifth = (int) Math. pow(2,(16 - fifth));
+
+            if(fourth != 255){
+                if(fourth % newfifth == 0){
+                    System.out.println("The IP Address " + ip_add + " is a Network Address");
+                }
+                else if(fourth % (newfifth-1) == 0){
+                    System.out.println("The IP Address " + ip_add + " is a Broadcast Address");
+                }
+                else{
+                    System.out.println("The IP Address " + ip_add + " is a Host Address");
+                }
+            }
+            else if(third != 255){
+                if(third % newfifth == 0){
+                    System.out.println("The IP Address " + ip_add + " is a Network Address");
+                }
+                else if(third % (newfifth-1) == 0){
+                    System.out.println("The IP Address " + ip_add + " is a Broadcast Address");
+                }
+                else{
+                    System.out.println("The IP Address " + ip_add + " is a Host Address");
+                }
+            }
+            else{
+                if(second % newfifth == 0){
+                    System.out.println("The IP Address " + ip_add + " is a Network Address");
+                }
+                else if(second % (newfifth-1) == 0){
+                    System.out.println("The IP Address " + ip_add + " is a Broadcast Address");
+                }
+                else{
+                    System.out.println("The IP Address " + ip_add + " is a Host Address");
+                }
+            }
+        }
+        else if(fifth >= 16 && fifth <= 23){
+            newfifth = (int) Math. pow(2,(24 - fifth));
+
+            if(fourth != 255){
+                if(fourth % newfifth == 0){
+                    System.out.println("The IP Address " + ip_add + " is a Network Address");
+                }
+                else if(fourth % (newfifth-1) == 0){
+                    System.out.println("The IP Address " + ip_add + " is a Broadcast Address");
+                }
+                else{
+                    System.out.println("The IP Address " + ip_add + " is a Host Address");
+                }
+            }
+            else{
+                if(third % newfifth == 0){
+                    System.out.println("The IP Address " + ip_add + " is a Network Address");
+                }
+                else if(third % (newfifth-1) == 0){
+                    System.out.println("The IP Address " + ip_add + " is a Broadcast Address");
+                }
+                else{
+                    System.out.println("The IP Address " + ip_add + " is a Host Address");
+                }
+            }
+        }
+        else{
+            newfifth = (int) Math. pow(2,(32 - fifth));
+
+            if(fourth % newfifth == 0){
+                System.out.println("The IP Address " + ip_add + " is a Network Address");
+            }
+            else if(fourth % (newfifth-1) == 0){
+                System.out.println("The IP Address " + ip_add + " is a Broadcast Address");
+            }
+            else{
+                System.out.println("The IP Address " + ip_add + " is a Host Address");
+            }
+        }
+
+        System.out.print("0 - Go To Menu, 1 - Input Address Type Again: ");
+        int terminate = input.nextInt();
+        if(terminate == 0){
+            clearScreen();
+            MainMenu();
+        }
+        else{
+            clearScreen();
+            AddressType();
+        }
+    }
+
+    public static void MainMenu(){
+
+        System.out.println("Hello there Network Admin!");
+        System.out.println("In order to help you, please select any of the following options:");
+
+        System.out.println("[1] Subnet Calculator");
+        System.out.println("[2] Check Address Class");
+        System.out.println("[3] Check Address Type");
+        System.out.println("[4] Exit");
+        
+        System.out.print("Input: ");
+        int choice = input.nextInt();
+         
+        clearScreen();
+        switch(choice) {
+            case 1:
+                SubnetCalculator();
+                break;
+            case 2:
+                AddressClass();
+                break;
+            case 3:
+                AddressType();
+                break;
+            case 4:
+                System.out.println("Good Luck Network Admin!");
+                System.exit(0);
+                break;
+            default:
+                break;
+        }
+    }
+
     public static void main(String[] args) throws Exception {
-        JFrame Mainframe = new JFrame("Network Guide Tool");
-        Mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        Mainframe.setBounds(350, 50, 600, 600);
-
-        JPanel TitlePanel = new JPanel();
-        JLabel title_label = new JLabel("<html> Hello there Network Admin! <br/> In order to help you, please select any of the following options: </html>", SwingConstants.CENTER);
-        TitlePanel.add(title_label);
-
-        JPanel BodyPanel = new JPanel(new BorderLayout());
-        BodyPanel.setBorder(new EmptyBorder(2, 3, 2, 3));
-
-        JPanel layout = new JPanel(new GridBagLayout());
-        layout.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-        JPanel btnPanel = new JPanel(new GridLayout(10, 1, 10, 5));
-
-        JButton subnetcal_button = new JButton("[1] Subnet Calculator");
-        JButton addressclass_button = new JButton("[2] Check Address Class");
-        JButton addresstype_button = new JButton("[3] Check Address Type");
-        JButton exit_button = new JButton("[4] Exit");
-        btnPanel.add(subnetcal_button);
-        btnPanel.add(addressclass_button);
-        btnPanel.add(addresstype_button);
-        btnPanel.add(exit_button);
-
-        layout.add(btnPanel);
-        BodyPanel.add(layout, BorderLayout.CENTER);
-
-        Mainframe.getContentPane().add(BorderLayout.NORTH, TitlePanel);
-        Mainframe.getContentPane().add(BorderLayout.CENTER, BodyPanel);
-        Mainframe.setVisible(true);
+        MainMenu();
     }
 }
