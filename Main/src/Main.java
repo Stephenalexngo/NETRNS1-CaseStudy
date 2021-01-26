@@ -2,18 +2,67 @@ import java.util.*;
 
 public class Main {
     static Scanner input = new Scanner(System.in);
+    static String description = "";
+    static String addblock = "";
 
     public static void clearScreen() {  
         System.out.print("\033[H\033[2J");  
         System.out.flush();  
     }  
 
+    public static boolean SpecialIpAddress(int first, int second, int third, int fourth){
+        if(first == 0){
+
+        }
+        else if(first == 100 && second >= 64 && second <= 127){
+
+        }   
+        else if(first == 127){
+
+        }
+        else if(first == 169 && second == 254){
+
+        }
+        else if()
+
+
+        return false;
+    }
+
     public static void SubnetCalculator(){
         
     }
 
     public static void AddressClass(){
+        System.out.print("Input IP Address: ");
+        String ip_add = input.next();
+        String[] new_add = ip_add.split("\\."); 
 
+        int first = Integer.parseInt(new_add[0]); 
+        int second = Integer.parseInt(new_add[1]); 
+        int third = Integer.parseInt(new_add[2]);
+        int fourth = Integer.parseInt(new_add[3]);
+
+        description = "";
+        addblock = "";
+
+        if(first < 0 && first > 255 && second < 0 && second > 255 && third < 0 && third > 255 && fourth < 0 && fourth > 255){
+            System.out.println("Error: Invalid IP Address.");
+        }
+        else if(SpecialIpAddress(first, second, third, fourth)){
+
+        }
+
+        System.out.print("0 - Go To Menu, 1 - Input Address Type Again: ");
+        int terminate = input.nextInt();
+        if(terminate == 0){
+            clearScreen();
+            MainMenu();
+        }
+        else{
+            clearScreen();
+            AddressType();
+        }
     }
 
     public static void AddressType(){
