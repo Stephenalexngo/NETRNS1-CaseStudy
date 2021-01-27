@@ -9,6 +9,213 @@ public class Main {
         System.out.flush();  
     }  
 
+    public static int log2(int n){ 
+        int result = (int) Math.ceil(Math.log(n) / Math.log(2));
+        return result; 
+    } 
+
+    public static String calcSubnet(int prefix){
+        String result = "";
+        String[] octets = new String[4];
+        int counter = prefix;
+
+        for(int x = 0; x < 4; x++){
+            octets[x] = "";
+            for(int y = 0; y < 8; y++){
+                if(counter == 0){
+                    octets[x] += '0';
+                }else{
+                    octets[x] += '1';
+                    counter--;
+                }
+            }
+            int decimal = Integer.parseInt(octets[x], 2);
+            octets[x] = Integer.toString(decimal) + ".";
+        }
+
+        octets[3] = octets[3].replace(".", "");
+
+        for(int x = 0; x < 4; x++){
+            result += octets[x];
+        }
+        
+        return result;
+    }
+
+    public static String calcNetwork(String ipaddress, int CIDR){
+        String[] tempIP;
+        int num;
+        String numBinary;
+        String finalIP;
+        String [] tempFinal;
+        String tempPlus = "";
+
+        tempIP = ipaddress.split("\\.");
+        num = (int) Math.pow(2, 32 - CIDR);
+        numBinary = Integer.toBinaryString(num);
+
+        for(int x = 0; x < 4; x++){
+            tempIP[x] = Integer.toBinaryString(Integer.parseInt(tempIP[x]));
+            while(tempIP[x].length() != 8){
+                tempIP[x] = 0 + tempIP[x];
+            }
+            tempPlus += tempIP[x];
+        }
+
+        finalIP = addBinary(tempPlus, numBinary);
+        finalIP = insertString(finalIP, ".", 7);
+        finalIP = insertString(finalIP, ".", 16);
+        finalIP = insertString(finalIP, ".", 25);
+
+        tempFinal = finalIP.split("\\.");
+        finalIP = "";
+
+        for(int x = 0; x < 4; x++){
+            tempFinal[x] = Integer.toString(Integer.parseInt(tempFinal[x], 2));
+            finalIP += tempFinal[x] + ".";
+        }
+
+        
+        finalIP = finalIP.replaceFirst(".$","");
+
+        return finalIP;
+
+    }
+
+    public static String addBinary(String first, String second){  
+        String result = "";  
+        int temp = 0;          
+        int x = first.length() - 1; 
+        int y = second.length() - 1; 
+
+        while (x >= 0 || y >= 0 || temp == 1){ 
+            temp += ((x >= 0)? first.charAt(x) - '0': 0); 
+            temp += ((y >= 0)? second.charAt(y) - '0': 0); 
+
+            result = (char)(temp % 2 + '0') + result; 
+            temp /= 2;
+            x--; 
+            y--; 
+        } 
+          
+        return result; 
+    } 
+
+    public static String insertString(String mainstring, String extendedstring, int counter){ 
+        String newstring = new String(); 
+  
+        for (int i = 0; i < mainstring.length(); i++) { 
+            newstring += mainstring.charAt(i); 
+            if(i == counter)
+                newstring += extendedstring; 
+        }
+        return newstring; 
+    }
+    
+    public static String calcFirst(String ipaddress){
+        String[] octets = ipaddress.split("\\.");
+        String tempPlus = "";
+        String result;
+        String[] tempFinal;
+
+        for(int x = 0; x < 4; x++){
+            octets[x] = Integer.toBinaryString(Integer.parseInt(octets[x]));    
+            while(octets[x].length() != 8){
+                octets[x] = 0 + octets[x];
+            }
+            tempPlus += octets[x];        
+        }
+        
+        result = addBinary(tempPlus, "1");
+        result = insertString(result, ".", 7);
+        result = insertString(result, ".", 16);
+        result = insertString(result, ".", 25);
+        tempFinal = result.split("\\.");
+        result = "";
+
+        for(int x = 0; x < 4; x++){
+            tempFinal[x] = Integer.toString(Integer.parseInt(tempFinal[x], 2));
+            result += tempFinal[x] + ".";
+        }
+        result = result.replaceFirst(".$","");
+
+        return result;
+    }
+
+    public static String calcLast(String ipaddress, int CIDR){
+        String[] tempIP;
+        int num;
+        String numBinary;
+        String finalIP;
+        String [] tempFinal;
+        String tempPlus = "";
+
+        tempIP = ipaddress.split("\\.");
+
+        num = (int) Math.pow(2, 32 - CIDR);
+        numBinary = Integer.toBinaryString(num - 2);
+
+        for(int x = 0; x < 4; x++){
+            tempIP[x] = Integer.toBinaryString(Integer.parseInt(tempIP[x]));
+            while(tempIP[x].length() != 8){
+                tempIP[x] = 0 + tempIP[x];
+            }
+            tempPlus += tempIP[x];
+        }
+
+        finalIP = addBinary(tempPlus, numBinary);
+        finalIP = insertString(finalIP, ".", 7);
+        finalIP = insertString(finalIP, ".", 16);
+        finalIP = insertString(finalIP, ".", 25);
+        tempFinal = finalIP.split("\\.");
+        finalIP = "";
+
+        for(int x = 0; x < 4; x++){
+            tempFinal[x] = Integer.toString(Integer.parseInt(tempFinal[x], 2));
+            finalIP += tempFinal[x] + ".";
+        }
+        finalIP = finalIP.replaceFirst(".$","");
+
+        return finalIP;
+    }
+
+    public static String calcBroad(String ipaddress, int CIDR){
+        String[] tempIP;
+        int num;
+        String numBinary;
+        String finalIP;
+        String [] tempFinal;
+        String tempPlus = "";
+
+        tempIP = ipaddress.split("\\.");
+
+        num = (int) Math.pow(2, 32 - CIDR);
+        numBinary = Integer.toBinaryString(num - 1);
+
+        for(int x = 0; x < 4; x++){
+            tempIP[x] = Integer.toBinaryString(Integer.parseInt(tempIP[x]));
+            while(tempIP[x].length() != 8){
+                tempIP[x] = 0 + tempIP[x];
+            }
+            tempPlus += tempIP[x];
+        }
+
+        finalIP = addBinary(tempPlus, numBinary);
+        finalIP = insertString(finalIP, ".", 7);
+        finalIP = insertString(finalIP, ".", 16);
+        finalIP = insertString(finalIP, ".", 25);
+        tempFinal = finalIP.split("\\.");
+        finalIP = "";
+
+        for(int x = 0; x < 4; x++){
+            tempFinal[x] = Integer.toString(Integer.parseInt(tempFinal[x], 2));
+            finalIP += tempFinal[x] + ".";
+        }
+        finalIP = finalIP.replaceFirst(".$","");
+
+        return finalIP;
+    }
+
     // https://en.wikipedia.org/wiki/Reserved_IP_addresses :D
     public static boolean SpecialIpAddress(int first, int second, int third, int fourth){
         if(first == 0){
@@ -68,17 +275,79 @@ public class Main {
     }
 
     public static void SubnetCalculator(){
+        IpAddress ipAddress;
+        ArrayList<Network> arrnetwork = new ArrayList<Network>();
+        int numofnet = 0;
+        int counter = 0;
+
         System.out.print("Input IP Address: ");
-        String ip_add = input.next();
+        ipAddress = new IpAddress(input.next());
         System.out.print("Input number of networks: ");
-        int num_network = input.nextInt();
+        numofnet = input.nextInt();
         
-        for(int x=0; x<num_network; x++){
-            System.out.print("Input the name of network " + (x+1) + ": ");
+        while(counter != numofnet){
+            System.out.print("Input the name of network " + (counter+1) + ": ");
             input.nextLine();
             String name = input.nextLine();
             System.out.print("Input the number of IP Addresses needed: ");
             int num_ip = input.nextInt();
+            arrnetwork.add(new Network(name, num_ip));
+
+            counter++;
+        }
+
+        counter = 0;
+
+        Collections.sort(arrnetwork);
+
+        System.out.println("Network Information");
+        System.out.println("ID\tNetwork Name\tNetwork Address\tSubnet Mask\t Prefix Length");
+
+        String networkAdd = ipAddress.getIP();
+        
+        while(counter != numofnet){
+            String subnetMask = "";
+            String pref = "";
+            int CIDR = 32 - log2(arrnetwork.get(counter).numofnetwork + 2);
+
+            subnetMask = calcSubnet(CIDR);
+            pref = "/" + Integer.toString(CIDR);
+
+            System.out.println((counter+1) + "\t" + arrnetwork.get(counter).name + "\t" + networkAdd + "\t" + subnetMask + "\t" + pref);
+
+            networkAdd = calcNetwork(networkAdd, CIDR);
+            counter++;
+        }
+
+        counter = 0;
+
+        System.out.println("\n");
+        System.out.println("Address Information");
+        System.out.println("ID\tFirst Usable Addr\tLast Usable Addr\tBroadcast Address\tUsable IPs  Free IPs");
+
+        networkAdd = ipAddress.getIP();
+
+        while(counter != numofnet){
+            int CIDR = 32 - log2(arrnetwork.get(counter).numofnetwork + 2);
+            String firstUsable = calcFirst(networkAdd);
+            String lastUsable = calcLast(networkAdd, CIDR);
+            String broadCast = calcBroad(networkAdd, CIDR);
+
+            System.out.println((counter+1) + "\t" + firstUsable + "\t\t" + lastUsable + "\t\t" + broadCast);
+
+            networkAdd = calcNetwork(networkAdd, CIDR);
+            counter++;
+        }
+
+        System.out.print("0 - Go To Menu, 1 - Input Address Type Again: ");
+        int terminate = input.nextInt();
+        if(terminate == 0){
+            clearScreen();
+            MainMenu();
+        }
+        else{
+            clearScreen();
+            SubnetCalculator();
         }
     }
 
