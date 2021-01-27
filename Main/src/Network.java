@@ -13,7 +13,7 @@ public class Network implements Comparable<Network> {
 
     @Override
     public int compareTo(Network comparenet) {
-        int comparenum =((Network)comparenet).numofnetwork;
+        int comparenum = comparenet.numofnetwork;
 
         return comparenum-this.numofnetwork;
     }

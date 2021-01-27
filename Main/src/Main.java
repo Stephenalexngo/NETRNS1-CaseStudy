@@ -42,46 +42,6 @@ public class Main {
         return result;
     }
 
-    public static String calcNetwork(String ipaddress, int CIDR){
-        String[] tempIP;
-        int num;
-        String numBinary;
-        String finalIP;
-        String [] tempFinal;
-        String tempPlus = "";
-
-        tempIP = ipaddress.split("\\.");
-        num = (int) Math.pow(2, 32 - CIDR);
-        numBinary = Integer.toBinaryString(num);
-
-        for(int x = 0; x < 4; x++){
-            tempIP[x] = Integer.toBinaryString(Integer.parseInt(tempIP[x]));
-            while(tempIP[x].length() != 8){
-                tempIP[x] = 0 + tempIP[x];
-            }
-            tempPlus += tempIP[x];
-        }
-
-        finalIP = addBinary(tempPlus, numBinary);
-        finalIP = insertString(finalIP, ".", 7);
-        finalIP = insertString(finalIP, ".", 16);
-        finalIP = insertString(finalIP, ".", 25);
-
-        tempFinal = finalIP.split("\\.");
-        finalIP = "";
-
-        for(int x = 0; x < 4; x++){
-            tempFinal[x] = Integer.toString(Integer.parseInt(tempFinal[x], 2));
-            finalIP += tempFinal[x] + ".";
-        }
-
-        
-        finalIP = finalIP.replaceFirst(".$","");
-
-        return finalIP;
-
-    }
-
     public static String addBinary(String first, String second){  
         String result = "";  
         int temp = 0;          
@@ -142,10 +102,10 @@ public class Main {
         return result;
     }
 
-    public static String calcLast(String ipaddress, int CIDR){
+    public static String CalculateNetworkandLastandBroad(String ipaddress, String type, int CIDR){
         String[] tempIP;
         int num;
-        String numBinary;
+        String numBinary = "";
         String finalIP;
         String [] tempFinal;
         String tempPlus = "";
@@ -153,44 +113,13 @@ public class Main {
         tempIP = ipaddress.split("\\.");
 
         num = (int) Math.pow(2, 32 - CIDR);
-        numBinary = Integer.toBinaryString(num - 2);
 
-        for(int x = 0; x < 4; x++){
-            tempIP[x] = Integer.toBinaryString(Integer.parseInt(tempIP[x]));
-            while(tempIP[x].length() != 8){
-                tempIP[x] = 0 + tempIP[x];
-            }
-            tempPlus += tempIP[x];
-        }
-
-        finalIP = addBinary(tempPlus, numBinary);
-        finalIP = insertString(finalIP, ".", 7);
-        finalIP = insertString(finalIP, ".", 16);
-        finalIP = insertString(finalIP, ".", 25);
-        tempFinal = finalIP.split("\\.");
-        finalIP = "";
-
-        for(int x = 0; x < 4; x++){
-            tempFinal[x] = Integer.toString(Integer.parseInt(tempFinal[x], 2));
-            finalIP += tempFinal[x] + ".";
-        }
-        finalIP = finalIP.replaceFirst(".$","");
-
-        return finalIP;
-    }
-
-    public static String calcBroad(String ipaddress, int CIDR){
-        String[] tempIP;
-        int num;
-        String numBinary;
-        String finalIP;
-        String [] tempFinal;
-        String tempPlus = "";
-
-        tempIP = ipaddress.split("\\.");
-
-        num = (int) Math.pow(2, 32 - CIDR);
-        numBinary = Integer.toBinaryString(num - 1);
+        if(type.equals("Last"))
+            numBinary = Integer.toBinaryString(num - 2);
+        else if(type.equals("Broad"))    
+            numBinary = Integer.toBinaryString(num - 1);
+        else
+            numBinary = Integer.toBinaryString(num);
 
         for(int x = 0; x < 4; x++){
             tempIP[x] = Integer.toBinaryString(Integer.parseInt(tempIP[x]));
@@ -304,7 +233,9 @@ public class Main {
         System.out.println("ID\tNetwork Name\tNetwork Address\tSubnet Mask\t Prefix Length");
 
         String networkAdd = ipAddress.getIP();
-        
+        ArrayList<Integer> arrusable = new ArrayList<Integer>();
+        ArrayList<Integer> arrfree = new ArrayList<Integer>();
+
         while(counter != numofnet){
             String subnetMask = "";
             String pref = "";
@@ -314,8 +245,11 @@ public class Main {
             pref = "/" + Integer.toString(CIDR);
 
             System.out.println((counter+1) + "\t" + arrnetwork.get(counter).name + "\t" + networkAdd + "\t" + subnetMask + "\t" + pref);
+            pref = pref.replace("/", "");
+            arrusable.add((int) (Math.pow(2,(32 - Integer.parseInt(pref)))-2));
+            arrfree.add(((int) (Math.pow(2,(32 - Integer.parseInt(pref)))-2)) - arrnetwork.get(counter).numofnetwork);
 
-            networkAdd = calcNetwork(networkAdd, CIDR);
+            networkAdd = CalculateNetworkandLastandBroad(networkAdd,"Network",CIDR);
             counter++;
         }
 
@@ -329,13 +263,13 @@ public class Main {
 
         while(counter != numofnet){
             int CIDR = 32 - log2(arrnetwork.get(counter).numofnetwork + 2);
-            String firstUsable = calcFirst(networkAdd);
-            String lastUsable = calcLast(networkAdd, CIDR);
-            String broadCast = calcBroad(networkAdd, CIDR);
+            String first_usable_num = calcFirst(networkAdd);
+            String last_usable_num = CalculateNetworkandLastandBroad(networkAdd,"Last",CIDR);
+            String broadcast_num = CalculateNetworkandLastandBroad(networkAdd,"Broad",CIDR);
 
-            System.out.println((counter+1) + "\t" + firstUsable + "\t\t" + lastUsable + "\t\t" + broadCast);
+            System.out.println((counter+1) + "\t" + first_usable_num + "\t\t" + last_usable_num + "\t\t" + broadcast_num + "\t\t" + arrusable.get(counter) + "           " + arrfree.get(counter));
 
-            networkAdd = calcNetwork(networkAdd, CIDR);
+            networkAdd = CalculateNetworkandLastandBroad(networkAdd,"Network",CIDR);
             counter++;
         }
 
