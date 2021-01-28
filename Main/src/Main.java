@@ -297,7 +297,7 @@ public class Main {
 
         description = "";
 
-        if((first < 0 || first > 255) || (second < 0 && second > 255) || (third < 0 && third > 255) || (fourth < 0 && fourth > 255)){
+        if((first < 0 || first > 255) || (second < 0 || second > 255) || (third < 0 || third > 255) || (fourth < 0 || fourth > 255)){
             System.out.println("Error: Invalid IP Address.");
         }
         else if(SpecialIpAddress(first, second, third, fourth)){
